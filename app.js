@@ -1,13 +1,17 @@
 ﻿const card = document.getElementById("card");
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
-const message = document.getElementById("message");
+const dodgeCountEl = document.getElementById("dodgeCount");
+const toastEl = document.getElementById("toast");
 
 let locked = false;
 let yesX = 24;
 let yesY = 24;
 let targetX = 24;
 let targetY = 24;
+let dodgeCount = 0;
+let toastTimer;
+let lastCountAt = 0;
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -15,6 +19,38 @@ function clamp(value, min, max) {
 
 function randomInRange(min, max) {
   return Math.random() * (max - min) + min;
+}
+
+function showToast(text) {
+  toastEl.textContent = text;
+  toastEl.classList.add("show");
+  window.clearTimeout(toastTimer);
+  toastTimer = window.setTimeout(() => {
+    toastEl.classList.remove("show");
+  }, 650);
+}
+
+function updateDodgeCount() {
+  dodgeCountEl.textContent = `회피 성공 ${dodgeCount}회`;
+  const strength = Math.min(dodgeCount, 24);
+  noBtn.style.boxShadow = `0 10px ${20 + strength}px rgba(15,123,95,${0.2 + strength * 0.012})`;
+}
+
+function pulseNoButton() {
+  noBtn.classList.remove("pulse");
+  void noBtn.offsetWidth;
+  noBtn.classList.add("pulse");
+}
+
+function registerDodge(toastText) {
+  const now = performance.now();
+  if (now - lastCountAt < 180) return;
+
+  lastCountAt = now;
+  dodgeCount += 1;
+  updateDodgeCount();
+  pulseNoButton();
+  showToast(toastText);
 }
 
 function getViewportLimits() {
@@ -77,6 +113,7 @@ function dodgeFrom(pointerX, pointerY) {
   const nextY = yesY + (dy / distance) * push;
 
   setYesTarget(nextX, nextY);
+  registerDodge("또 피했습니다");
 
   yesBtn.style.transform = `scale(${randomInRange(0.97, 1.04)}) rotate(${randomInRange(-5, 5)}deg)`;
   yesBtn.style.filter = "brightness(1.03) saturate(1.12)";
@@ -112,6 +149,7 @@ function jumpToFarthestSpot(pointerX, pointerY) {
   }
 
   setYesTarget(best.x, best.y);
+  registerDodge("잡기 직전에 도망!");
 }
 
 function teleportYesButton() {
@@ -160,19 +198,20 @@ document.addEventListener("pointerdown", (event) => {
 
   if (!locked && distance < 220) {
     jumpToFarthestSpot(event.clientX, event.clientY);
-    message.textContent = "예 버튼은 절대 클릭되지 않습니다.";
   }
 });
 
 noBtn.addEventListener("click", () => {
   locked = true;
   card.classList.add("is-confirmed");
-  message.textContent = "선택 완료: 아니오를 고르셨습니다.";
+  toastEl.classList.remove("show");
+  dodgeCountEl.textContent = `선택 완료: 아니오`;
   releaseConfetti();
 });
 
 teleportYesButton();
 animateYesButton();
+updateDodgeCount();
 
 window.addEventListener("resize", () => {
   setYesTarget(yesX, yesY, true);

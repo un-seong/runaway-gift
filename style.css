@@ -97,9 +97,37 @@ body {
 }
 
 .sub {
-  margin: 0 0 22px;
+  margin: 0 0 14px;
   color: var(--muted);
   font-size: clamp(0.92rem, 2.2vw, 1.02rem);
+}
+
+.status {
+  min-height: 56px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 12px;
+}
+
+.counter {
+  margin: 0;
+  font-weight: 700;
+  color: #2d3b4f;
+  font-size: 0.95rem;
+}
+
+.toast {
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+  color: #3f4958;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .btn {
@@ -133,10 +161,8 @@ body {
   background: linear-gradient(135deg, var(--no-a), var(--no-b));
 }
 
-.message {
-  margin: 16px 2px 0;
-  min-height: 1.5em;
-  font-weight: 600;
+.btn-no.pulse {
+  animation: attractPulse 320ms ease;
 }
 
 .card.is-confirmed {
@@ -180,6 +206,12 @@ body {
   100% { transform: translateY(0); }
 }
 
+@keyframes attractPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
 @media (max-width: 560px) {
   .btn {
     font-size: 0.95rem;
@@ -190,4 +222,3 @@ body {
     font-size: clamp(0.9rem, 4.6vw, 1.3rem);
   }
 }
-
