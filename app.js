@@ -1,6 +1,7 @@
 ﻿const card = document.getElementById("card");
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
+const retryBtn = document.getElementById("retryBtn");
 const dodgeCountEl = document.getElementById("dodgeCount");
 const toastEl = document.getElementById("toast");
 
@@ -187,6 +188,25 @@ function releaseConfetti() {
   }
 }
 
+function resetToInitialState() {
+  locked = false;
+  dodgeCount = 0;
+  lastCountAt = 0;
+
+  card.classList.remove("is-confirmed");
+  noBtn.classList.remove("pulse");
+  noBtn.style.boxShadow = "";
+
+  toastEl.classList.remove("show");
+  toastEl.textContent = "";
+
+  yesBtn.classList.remove("hidden");
+  retryBtn.classList.add("hidden");
+
+  updateDodgeCount();
+  teleportYesButton();
+}
+
 document.addEventListener("mousemove", (event) => {
   const limits = getViewportLimits();
   const distance = Math.hypot(
@@ -216,7 +236,13 @@ noBtn.addEventListener("click", () => {
   card.classList.add("is-confirmed");
   toastEl.classList.remove("show");
   dodgeCountEl.textContent = "선택 완료: 아니오";
+  yesBtn.classList.add("hidden");
+  retryBtn.classList.remove("hidden");
   releaseConfetti();
+});
+
+retryBtn.addEventListener("click", () => {
+  resetToInitialState();
 });
 
 teleportYesButton();

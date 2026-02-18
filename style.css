@@ -7,6 +7,8 @@
   --yes-b: #ff9376;
   --no-a: #0f7b5f;
   --no-b: #16a276;
+  --retry-a: #3d5069;
+  --retry-b: #5a708f;
   --bg-a: #fff7ed;
   --bg-b: #ffe9d8;
   --bg-c: #ffd6c8;
@@ -130,6 +132,13 @@ body {
   transform: translateY(0);
 }
 
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
 .btn {
   border: 0;
   border-radius: 999px;
@@ -157,8 +166,17 @@ body {
   user-select: none;
 }
 
+.btn-yes.hidden,
+.btn-retry.hidden {
+  display: none;
+}
+
 .btn-no {
   background: linear-gradient(135deg, var(--no-a), var(--no-b));
+}
+
+.btn-retry {
+  background: linear-gradient(135deg, var(--retry-a), var(--retry-b));
 }
 
 .btn-no.pulse {
