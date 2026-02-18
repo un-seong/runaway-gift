@@ -12,6 +12,11 @@ let targetY = 24;
 let dodgeCount = 0;
 let toastTimer;
 let lastCountAt = 0;
+const dodgeToasts = [
+  "잡히기 직전에 도망!",
+  "아슬아슬했어요!",
+  "또 놓쳤네요!",
+];
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -19,6 +24,11 @@ function clamp(value, min, max) {
 
 function randomInRange(min, max) {
   return Math.random() * (max - min) + min;
+}
+
+function getRandomDodgeToast() {
+  const index = Math.floor(Math.random() * dodgeToasts.length);
+  return dodgeToasts[index];
 }
 
 function showToast(text) {
@@ -42,7 +52,7 @@ function pulseNoButton() {
   noBtn.classList.add("pulse");
 }
 
-function registerDodge(toastText) {
+function registerDodge() {
   const now = performance.now();
   if (now - lastCountAt < 180) return;
 
@@ -50,7 +60,7 @@ function registerDodge(toastText) {
   dodgeCount += 1;
   updateDodgeCount();
   pulseNoButton();
-  showToast(toastText);
+  showToast(getRandomDodgeToast());
 }
 
 function getViewportLimits() {
@@ -113,7 +123,7 @@ function dodgeFrom(pointerX, pointerY) {
   const nextY = yesY + (dy / distance) * push;
 
   setYesTarget(nextX, nextY);
-  registerDodge("또 피했습니다");
+  registerDodge();
 
   yesBtn.style.transform = `scale(${randomInRange(0.97, 1.04)}) rotate(${randomInRange(-5, 5)}deg)`;
   yesBtn.style.filter = "brightness(1.03) saturate(1.12)";
@@ -149,7 +159,7 @@ function jumpToFarthestSpot(pointerX, pointerY) {
   }
 
   setYesTarget(best.x, best.y);
-  registerDodge("잡기 직전에 도망!");
+  registerDodge();
 }
 
 function teleportYesButton() {
@@ -205,7 +215,7 @@ noBtn.addEventListener("click", () => {
   locked = true;
   card.classList.add("is-confirmed");
   toastEl.classList.remove("show");
-  dodgeCountEl.textContent = `선택 완료: 아니오`;
+  dodgeCountEl.textContent = "선택 완료: 아니오";
   releaseConfetti();
 });
 
