@@ -1,0 +1,193 @@
+﻿:root {
+  --ink: #1f2430;
+  --muted: #525a68;
+  --glass: rgba(255, 255, 255, 0.7);
+  --line: rgba(255, 255, 255, 0.45);
+  --yes-a: #ff746b;
+  --yes-b: #ff9376;
+  --no-a: #0f7b5f;
+  --no-b: #16a276;
+  --bg-a: #fff7ed;
+  --bg-b: #ffe9d8;
+  --bg-c: #ffd6c8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: linear-gradient(135deg, var(--bg-a), var(--bg-b) 45%, var(--bg-c));
+  color: var(--ink);
+  font-family: "IBM Plex Sans KR", sans-serif;
+}
+
+.ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(6px);
+  opacity: 0.55;
+  animation: drift 10s ease-in-out infinite;
+}
+
+.orb-a {
+  width: 280px;
+  height: 280px;
+  background: #ffd9c2;
+  top: -60px;
+  left: -40px;
+}
+
+.orb-b {
+  width: 240px;
+  height: 240px;
+  background: #ffd5e0;
+  right: -70px;
+  top: 18%;
+  animation-delay: -2.5s;
+}
+
+.orb-c {
+  width: 300px;
+  height: 300px;
+  background: #ffe7b8;
+  bottom: -100px;
+  left: 25%;
+  animation-delay: -5s;
+}
+
+.card {
+  width: min(96vw, 760px);
+  border: 1px solid var(--line);
+  background: var(--glass);
+  backdrop-filter: blur(14px);
+  border-radius: 24px;
+  box-shadow: 0 24px 70px rgba(44, 28, 22, 0.16);
+  padding: clamp(22px, 4vw, 36px);
+  position: relative;
+  text-align: center;
+}
+
+.kicker {
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  margin: 8px 0 12px;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1rem, 3.4vw, 2.4rem);
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.sub {
+  margin: 0 0 22px;
+  color: var(--muted);
+  font-size: clamp(0.92rem, 2.2vw, 1.02rem);
+}
+
+.btn {
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 12px 26px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.14);
+  touch-action: manipulation;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-yes {
+  position: fixed;
+  left: 24px;
+  top: 24px;
+  z-index: 20;
+  background: linear-gradient(135deg, var(--yes-a), var(--yes-b));
+  pointer-events: none;
+  user-select: none;
+}
+
+.btn-no {
+  background: linear-gradient(135deg, var(--no-a), var(--no-b));
+}
+
+.message {
+  margin: 16px 2px 0;
+  min-height: 1.5em;
+  font-weight: 600;
+}
+
+.card.is-confirmed {
+  animation: settle 420ms ease;
+}
+
+.confetti {
+  position: absolute;
+  width: 8px;
+  height: 10px;
+  border-radius: 2px;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+  opacity: 0;
+  animation: pop 880ms ease forwards;
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(14px, -18px) scale(1.04); }
+}
+
+@keyframes pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(0deg) scale(0.5);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
+  }
+}
+
+@keyframes settle {
+  0% { transform: translateY(0); }
+  35% { transform: translateY(-5px); }
+  100% { transform: translateY(0); }
+}
+
+@media (max-width: 560px) {
+  .btn {
+    font-size: 0.95rem;
+    padding: 11px 22px;
+  }
+
+  .title {
+    font-size: clamp(0.9rem, 4.6vw, 1.3rem);
+  }
+}
+
